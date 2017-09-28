@@ -1,47 +1,47 @@
 #!/bin/env python
 import pexpect
 
-username = "peter"
+username = raw_input("User: ")
 password = "tgztgztgz"
 adduser = "useradd " + username
-change_password = "passwd " + username 
+change_password = "passwd " + username
 check = 'cat /etc/group | grep %s' % username
 priv_root = 'sudo su'
-
-#login
-child = pexpect.spawn ('ssh vagrant@10.152.77.138')
-child.expect ('.*password:')
-child.sendline ('vagrant')
-child.expect ('.*64:')
+t = 250
 
 
-#root login
-child.sendline (priv_root)
-child.expect ('vagrant#')
+f = open('ips')
+for line in f:
+    if t > 10:
+
+        #login
+        login = "ssh vagrant@"+line
+        child = pexpect.spawn (login)
+        child.expect ('.*password:')
+        child.sendline ('vagrant')
+        child.expect ('.*64:')
 
 
-#adding user
-child.sendline(adduser)
-child.expect ('vagrant#')
-
-#create password
-child.sendline (change_password)
-child.expect ('password:')
-child.sendline (password)
-child.expect ('password:')
-child.sendline (password)
-child.expect ('vagrant#')
+        #root login
+        child.sendline (priv_root)
+        child.expect ('vagrant#')
 
 
+        #adding user
+        child.sendline(adduser)
+        child.expect ('vagrant#')
 
-#listing 
-child.sendline (check)
-child.expect ('vagrant#')
+        #create password
+        child.sendline (change_password)
+        child.expect ('password:')
+        child.sendline (password)
+        child.expect ('password:')
+        child.sendline (password)
+        child.expect ('vagrant#')
+	print "Username %s was successfuly create in %s"   % (username,line)  
 
-print child.check
 
+    else:
+        print "bad luck"
+f.close()
 
-#print child.before
-
-#print "Successfully test user create"
-print test
