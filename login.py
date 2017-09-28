@@ -44,4 +44,4 @@ print child.check
 #print child.before
 
 #print "Successfully test user create"
-
+print test
