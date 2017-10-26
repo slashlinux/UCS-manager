@@ -1,28 +1,25 @@
-
 #!/bin/env python
+import re
+import csv
+from datetime import datetime
 import pexpect
 import sys
 import time
-import re
-import csv
-
-command = raw_input("Type command:")
-#password = "AMpt157B"
-#adduser = "set account name " + username
 
 
-f = open('ips')
-for line in f:
-        string = line.replace("\n","")
+#Variabile
+ip_nexus = '195.59.212.103'
+n1kswi01 = "N7K-Swi01"
 
-        if len(command) > 0:
+
+if len(ip_nexus) > 0:
                #login
-                login = "ssh -o \"StrictHostKeyChecking no\" checks@"+string
+                login = "ssh -o \"StrictHostKeyChecking no\" checks@"+ip_nexus
                 child = pexpect.spawn (login)
-                child.logfile = open("mylog", "w")
+                child.logfile = open("n1kswi01_"+datetime.now().strftime("%Y-%m-%d"), "w")
                 i = child.expect([pexpect.TIMEOUT, '[Pp]assword: '])
                 if i == 0:
-                        print 'No SSH connection for %s or invalid IP' % (string)
+                        print 'No SSH connection for %s or invalid IP' % (ip_nexus)
 
                 if i == 1:
                         child.sendline ('AMpt157B')
@@ -35,22 +32,20 @@ for line in f:
 
 
 
-                        child.sendline(command)
+                        child.sendline('sh bgp sessions vrf all')
                         child.expect ('.*#')
                         time.sleep(5)
-                        print child.after
 
 
                         time.sleep(5)
                         child.sendline('exit')
 
-                        print "Login Successfull"
 
-        else:
+else:
 
                 print "Your input is empty...TRY AGAIN"
 
-f.close()
+
 
 
 otr="<tr>"
@@ -59,26 +54,28 @@ otd="<td>"
 ctd="</td>"
 tblo= "<table>"
 tblc= "</table>"
-otrbg = "<tr style=\"background-color=#c4c8ce\">"
+otrbg = "<tr bgcolor=Gray>"
 otd_red = "<td bgcolor=Red>"
 otd_green = "<td bgcolor=Lime>"
 
 print tblo
 
-print otrbg+otd+"Neighbor"+ctd+ \
-      otd+"ASN"+ctd+\
-      otd+"Flaps"+ctd+\
-      otd+"uptime"+ctd+ctr
+print otrbg+otd+"Device Name"+ctd,
+print otd+"Neighbor"+ctd,
+print otd+"ASN"+ctd,
+print otd+"Flaps"+ctd,
+print otd+"uptime"+ctd+ctr
 
 var = "\d[0-9]{1,2}:\d[0-9]{1,2}:\d[0-9]{1,2}"
 
-file = open('mylog')
+file = open("n1kswi01_"+datetime.now().strftime("%Y-%m-%d"))
 for line in file:
         string = line.replace("\n","")
         if (re.match('[\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}]|VRF',string)):
                 bgp_session = string.replace("|", " ").replace(",","")
 
-                print otr+otd+bgp_session.split()[0]+ctd,
+                print otr+otd+n1kswi01+ctd,
+                print otd+bgp_session.split()[0]+ctd,
                 print otd+bgp_session.split()[1]+ctd,
                 print otd+bgp_session.split()[2]+ctd,
                 if (re.match('[0-9]{1,2}:\d[0-9]{1,2}:\d[0-9]{1,2}',bgp_session.split()[3])):
@@ -87,4 +84,3 @@ for line in file:
                         print ("%s") % (otd_green+bgp_session.split()[3]+ctd+ctr)
 
 print tblc
-f.close()
