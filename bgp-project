@@ -85,3 +85,4 @@ for line in file:
                         print ("%s") % (otd_green+bgp_session.split()[3]+ctd+ctr)
 
 print tblc
+f.close()
