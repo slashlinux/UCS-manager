@@ -3,6 +3,8 @@
 import pexpect
 import sys
 import time
+import re
+import csv
 
 command = raw_input("Type command:")
 #password = "AMpt157B"
