@@ -1,3 +1,61 @@
+
+#!/bin/env python
+import pexpect
+import sys
+import time
+
+command = raw_input("Type command:")
+#password = "AMpt157B"
+#adduser = "set account name " + username
+
+
+f = open('ips')
+for line in f:
+        string = line.replace("\n","")
+
+        if len(command) > 0:
+               #login
+                login = "ssh -o \"StrictHostKeyChecking no\" checks@"+string
+                child = pexpect.spawn (login)
+                child.logfile = open("mylog", "w")
+                i = child.expect([pexpect.TIMEOUT, '[Pp]assword: '])
+                if i == 0:
+                        print 'No SSH connection for %s or invalid IP' % (string)
+
+                if i == 1:
+                        child.sendline ('AMpt157B')
+                        child.expect ('.*#')
+
+
+                #commands
+                        child.sendline('term len 0')
+                        child.expect ('.*#')
+
+
+
+                        child.sendline(command)
+                        child.expect ('.*#')
+                        time.sleep(5)
+                        print child.after
+
+
+                        time.sleep(5)
+                        child.sendline('exit')
+
+                        print "Login Successfull"
+
+        else:
+
+                print "Your input is empty...TRY AGAIN"
+
+f.close()
+
+
+
+
+
+
+
 #!/bin/env python
 import re
 import csv
