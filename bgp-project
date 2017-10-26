@@ -51,16 +51,6 @@ for line in f:
 f.close()
 
 
-
-
-
-
-
-#!/bin/env python
-import re
-import csv
-from datetime import datetime
-
 otr="<tr>"
 ctr="<tr>"
 otd="<td>"
