@@ -8,15 +8,15 @@ import time
 
 
 #Variabile
-ip_nexus = '195.59.212.103'
-n1kswi01 = "N7K-Swi01"
+ip_nexus = '192.168.2.2'
+n1kswi01 = "N7K-Device-01"
 
 
 if len(ip_nexus) > 0:
                #login
                 login = "ssh -o \"StrictHostKeyChecking no\" checks@"+ip_nexus
                 child = pexpect.spawn (login)
-                child.logfile = open("n1kswi01_"+datetime.now().strftime("%Y-%m-%d"), "w")
+                child.logfile = open("n7kdevice_"+datetime.now().strftime("%Y-%m-%d"), "w")
                 i = child.expect([pexpect.TIMEOUT, '[Pp]assword: '])
                 if i == 0:
                         print 'No SSH connection for %s or invalid IP' % (ip_nexus)
@@ -68,7 +68,7 @@ print otd+"uptime"+ctd+ctr
 
 var = "\d[0-9]{1,2}:\d[0-9]{1,2}:\d[0-9]{1,2}"
 
-file = open("n1kswi01_"+datetime.now().strftime("%Y-%m-%d"))
+file = open("n7kdevice_"+datetime.now().strftime("%Y-%m-%d"))
 for line in file:
         string = line.replace("\n","")
         if (re.match('[\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}]|VRF',string)):
@@ -84,3 +84,17 @@ for line in file:
                         print ("%s") % (otd_green+bgp_session.split()[3]+ctd+ctr)
 
 print tblc
+
+
+
+f= open("output.txt","w")
+f.write(tblo)
+f.write(otr+otd+n1kswi01+ctd)
+f.write(otd+bgp_session.split()[0]+ctd)
+f.write(otd+bgp_session.split()[1]+ctd)
+f.write(otd+bgp_session.split()[2]+ctd)
+if (re.match('[0-9]{1,2}:\d[0-9]{1,2}:\d[0-9]{1,2}',bgp_session.split()[3])):
+        f.write(otd_red+bgp_session.split()[3]+ctd+ctr)
+else:
+        f.write(otd_green+"BGP OK"+ctd+ctr)
+f.write(tblc)
