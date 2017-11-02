@@ -13,9 +13,10 @@ output=$(sshpass -p $SFTPPASSWORD sftp $SFTPUSERNAME@$SFTPHOSTNAME << !
 !);
 
 
-if egrep ":|style|table|Device" index.txt > send_mail.html; then
+#!/bin/bash
+if egrep ":" index.txt ; then
 
-        mailx -s "$(echo -e "BGP Network Issues\nContent-Type: text/html")" -r from_user@mail.com to_user@mail.com < send_mail.html
+          cat index.txt | egrep ":|style|table|Device"  | mailx -s "$(echo -e "BGP Session Uptime \nContent-Type: text/html")" -r from_monitoring@yahoo.com to_user@domain.com
 else
         exit 0
 fi
