@@ -164,12 +164,12 @@ Write-Output "Checking Cisco PowerTool"
 $PowerToolLoaded = $null
 $Modules = Get-Module
 $PowerToolLoaded = $modules.name
-if ( -not ($Modules -like "ciscoUcsPs"))
+if ( -not ($Modules -like "Cisco.UCSManager")) # previous value was ciscoUcsPs - gp
 	{
 		Write-Output "	Loading Module: Cisco UCS PowerTool Module"
-		Import-Module ciscoUcsPs
+		Import-Module Cisco.UCSManager # previous value was ciscoUcsPs - gp
 		$Modules = Get-Module
-		if ( -not ($Modules -like "ciscoUcsPs"))
+		if ( -not ($Modules -like "Cisco.UCSManager")) # previous value was ciscoUcsPs - gp
 			{
 				Write-Output ""
 				Write-Output "	Cisco UCS PowerTool did not load.  Please correct his issue and try again"
